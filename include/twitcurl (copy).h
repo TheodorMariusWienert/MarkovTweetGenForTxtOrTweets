@@ -58,8 +58,7 @@ public:
     bool timelineHomeGet( const std::string sinceId = ""  /* in */ );
     bool timelinePublicGet();
     bool timelineFriendsGet();
-    bool timelineUserGet( const long int  sinceId,
-                        const bool trimUser /* in */,
+    bool timelineUserGet( const bool trimUser /* in */,
 	                      const bool includeRetweets /* in */,
                           const unsigned int tweetCount /* in */,
                           const std::string userInfo = "" /* in */,
@@ -139,7 +138,7 @@ public:
     void setProxyServerPort( const std::string& proxyServerPort /* in */ );
     void setProxyUserName( const std::string& proxyUserName /* in */ );
     void setProxyPassword( const std::string& proxyPassword /* in */ );
-
+    
     /* Clones this object */
     twitCurl* clone();
 
