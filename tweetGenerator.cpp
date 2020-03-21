@@ -11,7 +11,9 @@
 #include <bits/stdc++.h>
 
 #include <fstream>
+
 #include <ctime>
+
 #include <streambuf>
 
 #include <stdlib.h>
@@ -19,14 +21,19 @@
 #include <random>
 
 #include "json.hpp"
+
 #include <unistd.h>
+
 #include <chrono>
+
 #include <thread>
+
 #include <functional>
+
+#include <unistd.h>
 
 using json = nlohmann::json;
 using namespace std;
-#include <unistd.h>
 
 
 void printUsage() {
@@ -48,19 +55,19 @@ class marcov {
   map < string, vector < string >> dict;
   vector < string > startWords;
   string outout;
-   long int since_Id=0;
-  string user="";
-  int count=0;
+  long int since_Id = 0;
+  string user = "";
+  int count = 0;
   public:
     void driver(string textString, bool jsonBool) {
       if (jsonBool) {
 
         printf("\nEnter the User you want to find( without @ if ou write wrong programm might crash(couldnt fix that) just try again than): ");
         cin >> user;
-        while(count<5){//limted by twitter api 10 are 5*200 tweets
+        while (count < 5) { //limted by twitter api 10 are 5*200 tweets
           count++;
           setTwitter(true);
-          cout<<"xxxxxxx"<<endl;
+          cout << "xxxxxxx" << endl;
         }
 
       } else createDict(textString);
@@ -77,40 +84,38 @@ class marcov {
       cin >> input2;
       input2[0] = toupper(input2[0]);
       if (input2[0] == 'Y') {
-        while(true){
-          outout="";
-        usleep(5000 * 1000); // takes microseconds
-        bot();
+        while (true) {
+          outout = "";
+          usleep(5000 * 1000); // takes microseconds
+          bot();
+        }
       }
-      }
-
-
-  }
-  private:
-
-    void bot(){
-      createTweet();
-      setTwitter(false);
-      }
-
-    void goThroughTweets(string jsonString) {
-
-      nlohmann::json answer = toJson(jsonString.c_str());
-      long int n=0;
-
-      for (int i = 0; i < answer.size(); i++) {
-        std::string temp = answer[i]["full_text"].get < std::string > ();
-        //std::cout << temp << '\n';
-        int pos = temp.find_last_of(" \t\n");
-        temp = temp.substr(0, pos);
-        if (pos > -1) createDict(temp);
-        n=i;
-      }
-      string number=answer[n]["id_str"].get < std::string > ();
-      since_Id=stol(number.c_str());
-
 
     }
+  private:
+
+    void bot() {
+      createTweet();
+      setTwitter(false);
+    }
+
+  void goThroughTweets(string jsonString) {
+
+    nlohmann::json answer = toJson(jsonString.c_str());
+    long int n = 0;
+
+    for (int i = 0; i < answer.size(); i++) {
+      std::string temp = answer[i]["full_text"].get < std::string > ();
+      //std::cout << temp << '\n';
+      int pos = temp.find_last_of(" \t\n");
+      temp = temp.substr(0, pos);
+      if (pos > -1) createDict(temp);
+      n = i;
+    }
+    string number = answer[n]["id_str"].get < std::string > ();
+    since_Id = stol(number.c_str());
+
+  }
   void createDict(string ex) {
 
     //std::cout << "createDict" << '\n';
@@ -173,7 +178,7 @@ class marcov {
     //printDict();
 
   }
-   void printDict() {
+  void printDict() {
     //std::cout << "printDict" << '\n';
     map < string, vector < string > > ::const_iterator it;
     for (it = dict.begin(); it != dict.end(); ++it)
@@ -245,25 +250,31 @@ class marcov {
     }
 
     //cut of string so its under 240
-      //cuts string at endpoint so it just doesnt end in random word
-      long unsigned endings [7] = { outout.rfind(". "),outout.rfind(".\t"), outout.rfind(". "), outout.rfind("! "), outout.rfind("? "),  outout.rfind("“ "),outout.rfind("; ") };
-      long unsigned temp = 0;
+    //cuts string at endpoint so it just doesnt end in random word
+    long unsigned endings[7] = {
+      outout.rfind(". "),
+      outout.rfind(".\t"),
+      outout.rfind(". "),
+      outout.rfind("! "),
+      outout.rfind("? "),
+      outout.rfind("“ "),
+      outout.rfind("; ")
+    };
+    long unsigned temp = 0;
 
-      for(int i=0;i<7;i++)
-    {
-        if(endings[i]>temp&&endings[i]!=string::npos&&endings[i]<240)
-        temp=endings[i];
+    for (int i = 0; i < 7; i++) {
+      if (endings[i] > temp && endings[i] != string::npos && endings[i] < 240)
+        temp = endings[i];
     }
-      if (temp > 0) {
-        outout = outout.substr(0, temp + 1);
-      } else {
-        //cuts last word
-        size_t pos3 = outout.find_last_of(" ");
+    if (temp > 0) {
+      outout = outout.substr(0, temp + 1);
+    } else {
+      //cuts last word
+      size_t pos3 = outout.find_last_of(" ");
 
-        outout = outout.substr(0, pos3);
+      outout = outout.substr(0, pos3);
 
-
-      }
+    }
     std::cout << "Tweet is in result.html" << endl;
     std::ofstream res("result.html");
 
@@ -360,10 +371,9 @@ class marcov {
       /* Get public timeline */
       replyMsg = "";
 
-      string userForTweets=user;
+      string userForTweets = user;
 
-
-      if (twitterObj.timelineUserGet(0,true, false, 200, userForTweets, false)) {
+      if (twitterObj.timelineUserGet(0, true, false, 200, userForTweets, false)) {
 
         twitterObj.getLastWebResponse(replyMsg);
         //printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );
@@ -378,7 +388,7 @@ class marcov {
 
     if (!flagGet) {
       replyMsg = "";
-      string userForTweets="Hey";//otherwise invalid free because of libabry maybe
+      string userForTweets = "Hey"; //otherwise invalid free because of libabry maybe
       if (twitterObj.statusUpdate(outout)) {
         twitterObj.getLastWebResponse(replyMsg);
         //printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );
