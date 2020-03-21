@@ -18,11 +18,6 @@
 
 #include <random>
 
-#include <boost/algorithm/string/find.hpp>
-
-#include <jsoncpp/json/json.h>
-
-
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -53,7 +48,7 @@ class marcov {
   public:
     void driver(string textString, bool jsonBool) {
       if (jsonBool) {
-        while(count<2){//limted by twitter api 10 are 10*200 tweets
+        while(count<10){//limted by twitter api 10 are 10*200 tweets
           count++;
           setTwitter(true);
           cout<<"xxxxxxx"<<endl;
