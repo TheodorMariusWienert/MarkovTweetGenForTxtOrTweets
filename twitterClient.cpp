@@ -331,7 +331,7 @@ class marcov {
       printf("\nEnter the User you want to find: ");
       cin >> userForTweets;
 
-      if (twitterObj.timelineUserGet(true, false, 200, userForTweets, false)) {
+      if (twitterObj.timelineUserGet(0,true, false, 200, userForTweets, false)) {
 
         twitterObj.getLastWebResponse(replyMsg);
         //printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );

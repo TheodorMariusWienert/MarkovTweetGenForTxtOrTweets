@@ -11,7 +11,7 @@
 #include <bits/stdc++.h>
 
 #include <fstream>
-
+#include <ctime>
 #include <streambuf>
 
 #include <stdlib.h>
@@ -19,9 +19,15 @@
 #include <random>
 
 #include "json.hpp"
+#include <unistd.h>
+#include <chrono>
+#include <thread>
+#include <functional>
 
 using json = nlohmann::json;
 using namespace std;
+#include <unistd.h>
+
 
 void printUsage() {
   printf("\nUsage:\ntwitterClient -u username -p password\n");
@@ -43,12 +49,15 @@ class marcov {
   vector < string > startWords;
   string outout;
    long int since_Id=0;
-  string userForTweets;
+  string user="";
   int count=0;
   public:
     void driver(string textString, bool jsonBool) {
       if (jsonBool) {
-        while(count<10){//limted by twitter api 10 are 10*200 tweets
+
+        printf("\nEnter the User you want to find( without @ if ou write wrong programm might crash(couldnt fix that) just try again than): ");
+        cin >> user;
+        while(count<5){//limted by twitter api 10 are 5*200 tweets
           count++;
           setTwitter(true);
           cout<<"xxxxxxx"<<endl;
@@ -63,9 +72,27 @@ class marcov {
       if (input[0] == 'Y') {
         setTwitter(false);
       }
+      cout << "Do yo want to run the Bot i your name it post Every  5 Seconds, input Y if so " << endl;
+      string input2;
+      cin >> input2;
+      input2[0] = toupper(input2[0]);
+      if (input2[0] == 'Y') {
+        while(true){
+          outout="";
+        usleep(5000 * 1000); // takes microseconds
+        bot();
+      }
+      }
 
-    }
+
+  }
   private:
+
+    void bot(){
+      createTweet();
+      setTwitter(false);
+      }
+
     void goThroughTweets(string jsonString) {
 
       nlohmann::json answer = toJson(jsonString.c_str());
@@ -224,12 +251,10 @@ class marcov {
 
       for(int i=0;i<7;i++)
     {
-        if(endings[i]>temp&&endings[i]!=string::npos)
+        if(endings[i]>temp&&endings[i]!=string::npos&&endings[i]<240)
         temp=endings[i];
     }
       if (temp > 0) {
-        string print = outout.substr(temp + 1, outout.length()-1);
-        cout<<print<<endl;
         outout = outout.substr(0, temp + 1);
       } else {
         //cuts last word
@@ -331,29 +356,29 @@ class marcov {
       twitterObj.getLastCurlError(replyMsg);
       //printf( "\ntwitterClient:: twitCurl::accountVerifyCredGet error:\n%s\n", replyMsg.c_str() );
     }
-
     if (flagGet) {
       /* Get public timeline */
       replyMsg = "";
 
-      if(userForTweets.length()<1){
-      printf("\nEnter the User you want to find: ");
-      cin >> userForTweets;}
+      string userForTweets=user;
 
-      if (twitterObj.timelineUserGet(since_Id,true, false, 200, userForTweets, false)) {
+
+      if (twitterObj.timelineUserGet(0,true, false, 200, userForTweets, false)) {
 
         twitterObj.getLastWebResponse(replyMsg);
-      //  printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );
+        //printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );
         goThroughTweets(replyMsg);
 
       } else {
         twitterObj.getLastCurlError(replyMsg);
         printf("\ntwitterClient:: twitCurl::timelinePublicGet error:\n%s\n", replyMsg.c_str());
       }
+
     }
+
     if (!flagGet) {
       replyMsg = "";
-
+      string userForTweets="Hey";//otherwise invalid free because of libabry maybe
       if (twitterObj.statusUpdate(outout)) {
         twitterObj.getLastWebResponse(replyMsg);
         //printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );
