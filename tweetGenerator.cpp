@@ -373,7 +373,7 @@ class marcov {
 
       string userForTweets = user;
 
-      if (twitterObj.timelineUserGet(0, true, false, 200, userForTweets, false)) {
+      if (twitterObj.timelineUserGet(since_Id, true, false, 200, userForTweets, false)) {
 
         twitterObj.getLastWebResponse(replyMsg);
         //printf( "\ntwitterClient:: twitCurl::timelinePublicGet web response:\n%s\n", replyMsg.c_str() );
